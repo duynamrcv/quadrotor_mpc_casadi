@@ -62,9 +62,9 @@ class Quadrotor:
         """
 
         # Clip inputs
-        for i, u_i in enumerate(u):
-            self.u[i] = max(min(u_i, self.max_input_value), self.min_input_value)
-        self.u = self.u * self.max_thrust
+        for i in range(u.shape[0]):
+            u[i] = max(min(u[i], self.max_input_value), self.min_input_value)
+        self.u = u * self.max_thrust
 
         # TODO: Generate disturbance forces / torques
         f_d = np.zeros((3, 1))
