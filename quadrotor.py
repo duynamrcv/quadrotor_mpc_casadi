@@ -72,51 +72,13 @@ class Quadrotor:
 
         x = self.get_state()
 
-        # RK4 integration
-        k1 = [
-            self.f_pos(x),
-            self.f_att(x),
-            self.f_vel(x, self.u, f_d),
-            self.f_rate(x, self.u, t_d),
-        ]
-        x_aux = [x[i] + dt / 2 * k1[i] for i in range(4)]
-        k2 = [
-            self.f_pos(x_aux),
-            self.f_att(x_aux),
-            self.f_vel(x_aux, self.u, f_d),
-            self.f_rate(x_aux, self.u, t_d),
-        ]
-        x_aux = [x[i] + dt / 2 * k2[i] for i in range(4)]
-        k3 = [
-            self.f_pos(x_aux),
-            self.f_att(x_aux),
-            self.f_vel(x_aux, self.u, f_d),
-            self.f_rate(x_aux, self.u, t_d),
-        ]
-        x_aux = [x[i] + dt * k3[i] for i in range(4)]
-        k4 = [
-            self.f_pos(x_aux),
-            self.f_att(x_aux),
-            self.f_vel(x_aux, self.u, f_d),
-            self.f_rate(x_aux, self.u, t_d),
-        ]
-        x = [
-            x[i]
-            + dt
-            * (
-                1.0 / 6.0 * k1[i]
-                + 2.0 / 6.0 * k2[i]
-                + 2.0 / 6.0 * k3[i]
-                + 1.0 / 6.0 * k4[i]
-            )
-            for i in range(4)
-        ]
-
-        # Ensure unit quaternion
-        x[1] = unit_quat(x[1])
-
-        self.pos, self.angle, self.vel, self.a_rate = x
-
+        # Euler integration
+        self.pos = self.pos + dt*self.f_pos(x)
+        quat = self.quat + dt*self.f_att(x)
+        self.quat = unit_quat(quat)
+        self.vel = self.vel + dt*self.f_vel(x, self.u, f_d)
+        self.a_rate = self.a_rate + dt*self.f_rate(x, self.u, t_d)
+    
     def f_pos(self, x):
         """
         Time-derivative of the position vector
@@ -163,10 +125,8 @@ class Quadrotor:
         """
 
         rate = x[3]
-        return np.array(
-            [
-                (u.dot(self.y_f) + t_d[0] + (self.J[1] - self.J[2]) * rate[1] * rate[2])/self.J[0],
-                (-u.dot(self.x_f) + t_d[1] + (self.J[2] - self.J[0]) * rate[2] * rate[0])/self.J[1],
-                (u.dot(self.z_l_tau) + t_d[2] + (self.J[0] - self.J[1]) * rate[0] * rate[1])/self.J[2],
-            ]
-        ).squeeze()
+        return np.array([
+            ( u.dot(self.y_f)     + t_d[0] + (self.J[1] - self.J[2]) * rate[1] * rate[2])/self.J[0],
+            (-u.dot(self.x_f)     + t_d[1] + (self.J[2] - self.J[0]) * rate[2] * rate[0])/self.J[1],
+            ( u.dot(self.z_l_tau) + t_d[2] + (self.J[0] - self.J[1]) * rate[0] * rate[1])/self.J[2],
+        ]).squeeze()

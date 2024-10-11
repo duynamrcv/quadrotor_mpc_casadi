@@ -1,15 +1,13 @@
 import os
 import casadi as ca
 import numpy as np
-# from acados_template import AcadosOcp, AcadosOcpSolver, AcadosModel
 from quadrotor import Quadrotor
 from utils import skew_symmetric, v_dot_q, quaternion_inverse
 
 
 class Controller:
     def __init__(self, quad:Quadrotor, n_nodes=20, dt=0.1,
-                 q_cost=None, r_cost=None, q_mask=None, rdrv_d_mat=None,
-                 model_name="quad_3d_acados_mpc", solver_options=None):
+                 q_cost=None, r_cost=None):
         """
         :param quad: quadrotor object
         :type quad: Quadrotor3D

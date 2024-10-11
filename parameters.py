@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 
 from utils import euler_to_quaternion
 
+FILE_NAME="data.txt"
 DT = 0.1
 N = 10
 
