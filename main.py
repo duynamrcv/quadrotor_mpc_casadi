@@ -14,11 +14,12 @@ if __name__ == "__main__":
     ref = []
 
     cur_time = 0
-    total_time = 20
+    total_time = 60
     iter = 0
     while(total_time > cur_time):
-        x_ref = get_reference(cur_time, N, DT)
-        ref.append(x_ref[:,0])
+        x0 = np.concatenate(quad.get_state())
+        x_ref = get_reference(cur_time, x0, N, DT)
+        ref.append(x_ref[:,1])
         thrust = controller.compute_control_signal(x_ref)
         # logging.info("Thrust value [0,1]: {}\t{}\t{}\t{}".format(thrust[0], thrust[1], thrust[2], thrust[3]))
         quad.update(thrust, dt=DT)

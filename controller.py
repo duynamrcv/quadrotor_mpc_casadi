@@ -50,6 +50,7 @@ class Controller:
 
         # Initial condition
         self.opt_x_ref = self.opti.parameter(self.x_dim, self.N+1)
+        self.opti.subject_to(self.opt_states[:, 0] == self.opt_x_ref[:, 0])
         for i in range(self.N):
             x_next = self.opt_states[:,i] + f(self.opt_states[:,i], self.opt_controls[:,i])*self.dt
             self.opti.subject_to(self.opt_states[:,i+1] == x_next)
@@ -114,10 +115,6 @@ class Controller:
     def compute_control_signal(self, x_ref):
         # Set parameter, here only update initial state of x (x0)
         self.opti.set_value(self.opt_x_ref, x_ref)
-
-        # # Provide the initial guess of the optimization targets
-        # self.opti.set_initial(self.opt_controls, u0.reshape(N, 3))# (N, 3)
-        # self.opti.set_initial(self.opt_states, next_states) # (N+1, 3)
 
         sol = self.opti.solve()
 
