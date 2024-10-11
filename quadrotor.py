@@ -55,7 +55,7 @@ class Quadrotor:
 
     def update(self, u, dt):
         """
-        Runge-Kutta 4th order dynamics integration
+        Euler dynamics integration
 
         :param u: 4-dimensional vector with components between [0.0, 1.0] that represent the activation of each motor.
         :param dt: time differential
