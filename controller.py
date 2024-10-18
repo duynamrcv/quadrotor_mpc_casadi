@@ -6,19 +6,11 @@ from utils import skew_symmetric, v_dot_q, quaternion_inverse
 
 
 class Controller:
-    def __init__(self, quad:Quadrotor, n_nodes=20, dt=0.1,
-                 q_cost=None, r_cost=None):
+    def __init__(self, quad:Quadrotor, n_nodes=20, dt=0.1):
         """
         :param quad: quadrotor object
         :type quad: Quadrotor3D
         :param n_nodes: number of optimization nodes until time horizon
-        :param q_cost: diagonal of Q matrix for LQR cost of MPC cost function. Must be a numpy array of length 12.
-        :param r_cost: diagonal of R matrix for LQR cost of MPC cost function. Must be a numpy array of length 4.
-        :param q_mask: Optional boolean mask that determines which variables from the state compute towards the cost
-        function. In case no argument is passed, all variables are weighted.
-        :param solver_options: Optional set of extra options dictionary for solvers.
-        :param rdrv_d_mat: 3x3 matrix that corrects the drag with a linear model according to Faessler et al. 2018. None
-        if not used
         """
 
         self.N = n_nodes    # number of control nodes within horizon
@@ -56,10 +48,8 @@ class Controller:
             self.opti.subject_to(self.opt_states[:,i+1] == x_next)
 
         # Weighted squared error loss function
-        if q_cost is None:
-            q_cost = np.diag([10, 10, 10, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05])
-        if r_cost is None:
-            r_cost = np.diag([0.1, 0.1, 0.1, 0.1])
+        q_cost = np.diag([10, 10, 10, 0.1, 0.1, 0.1, 0.1, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05])
+        r_cost = np.diag([0.1, 0.1, 0.1, 0.1])
 
         # Cost function
         obj = 0
