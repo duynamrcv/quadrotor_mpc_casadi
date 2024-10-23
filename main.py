@@ -7,13 +7,13 @@ import time
 
 if __name__ == "__main__":
     quad = Quadrotor()
-    controller = Controller(quad, n_nodes=N, dt=DT)
+    controller = Controller(quad, n_nodes=N, dt=DT, use_rbf=USE_RBF)
     path = []
     ref = []
     times = []
 
     cur_time = 0
-    total_time = 60
+    total_time = 20
     iter = 0
     while(total_time > cur_time):
         x0 = np.concatenate(quad.get_state())

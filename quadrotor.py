@@ -67,7 +67,8 @@ class Quadrotor:
         self.u = u * self.max_thrust
 
         # TODO: Generate disturbance forces / torques
-        f_d = np.zeros((3, 1))
+        # f_d = np.random.rand(3, 1)
+        f_d = np.ones((3,1))
         t_d = np.zeros((3, 1))
 
         x = self.get_state()

@@ -4,10 +4,13 @@ import pickle
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 
-with open(FILE_NAME, 'rb') as file:
+with open("results/data_False.txt", 'rb') as file:
     data = pickle.load(file)
+path0 = data['path']
 
-path = data['path']
+with open("results/data_True.txt", 'rb') as file:
+    data = pickle.load(file)
+path1 = data['path']
 ref = data['ref']
 # print(ref[:,0])
 # print(ref.shape)
@@ -16,7 +19,8 @@ ref = data['ref']
 fig = plt.figure()
 ax = fig.add_subplot(projection='3d')
 ax.plot(ref[:,0], ref[:,1], ref[:,2], label="reference")
-ax.plot(path[:,0], path[:,1], path[:,2], label="quadrotor")
+ax.plot(path0[:,0], path0[:,1], path0[:,2], label="quadrotor_False")
+ax.plot(path1[:,0], path1[:,1], path1[:,2], label="quadrotor_True")
 # ax.axis('equal')
 ax.set_xlabel('x [m]')
 ax.set_ylabel('y [m]')

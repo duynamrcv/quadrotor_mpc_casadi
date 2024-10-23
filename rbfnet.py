@@ -3,11 +3,11 @@ import numpy as np
 # RBF Neural Network Class
 class RBFNet:
     def __init__(self, num_inputs, num_rbfs, output_dim, learning_rate=0.01):
-        # Randomly initialize centers, widths, and weights
+        # Initialize centers, widths, and weights
         self.centers = np.array([np.linspace(-10, 10, num_rbfs) for _ in range(num_inputs)]).T   # Centers of RBFs
         self.sigmas = 5.0  # Widths of RBFs
         self.eta = 0.5
-        self.beta = 0.5
+        self.beta = 0.1
         self.weights = np.random.randn(num_rbfs, output_dim)  # Weights from RBF layer to output
         self.learning_rate = learning_rate
 
