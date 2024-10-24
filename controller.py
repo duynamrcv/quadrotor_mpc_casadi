@@ -21,7 +21,7 @@ class Controller:
         self.use_rbf = use_rbf
 
         if self.use_rbf:
-            self.rbfnet = RBFNet(num_inputs=6, num_rbfs=20, output_dim=3, learning_rate=0.1)
+            self.rbfnet = RBFNet(num_inputs1=3, num_inputs2=3, num_rbfs=40, output_dim=3, learning_rate=0.2)
 
         self.opti = ca.Opti()
         self.opt_states = self.opti.variable(self.x_dim, self.N+1)
@@ -117,8 +117,11 @@ class Controller:
         # print(x_ref.shape)
         # exit()
         if self.use_rbf:
-            f_d = self.rbfnet.predict(np.concatenate([self.quad.pos,self.quad.vel]), error=x_ref[:3,1] - self.quad.pos)
-            print("Error: {}, predict: {}".format(x_ref[:3,1] - self.quad.pos,f_d))
+            e_pos = (x_ref[:3,1] - self.quad.pos)
+            e_vel = (x_ref[7:10,1] - self.quad.vel)
+            error = 3*e_pos + e_vel
+            f_d = self.rbfnet.predict(self.quad.pos, self.quad.vel, error=error)
+            print("Error: {}, predict: {}".format(error, f_d))
         else:
             f_d = np.zeros((3,1))
 
