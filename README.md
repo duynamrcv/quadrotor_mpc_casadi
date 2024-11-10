@@ -5,11 +5,11 @@ This repository implement the nonlinear model predictive control for x-type quad
 ## Installation
 ### Download package
 ```
-git clone https://github.com/duynamrcv/quadrotor_mpc_acados
+git clone https://github.com/duynamrcv/quadrotor_mpc_casadi
 ```
 ### Prerequisite
 ```
-cd quadrotor_mpc_acados
+cd quadrotor_mpc_casadi
 pip install -r requirement.txt
 ```
 
